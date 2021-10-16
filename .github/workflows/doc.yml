@@ -8,7 +8,7 @@ on:
 
 jobs:
 
-  build:
+  godoc:
     runs-on: ubuntu-latest
     steps:
     - name: Set up Go
