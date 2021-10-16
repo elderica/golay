@@ -1,6 +1,7 @@
 package golay
 
 import (
+	"fmt"
 	"testing"
 )
 
@@ -533,6 +534,13 @@ func TestEncodeWord(t *testing.T) {
 	}
 }
 
+func ExampleEncodeWord() {
+	payload := uint16(0xbae)
+	encoded := EncodeWord(payload)
+	fmt.Printf("0x%08x\n", encoded)
+	// Output: 0x00fe8bae
+}
+
 func TestDecodeWord(t *testing.T) {
 	errorbits := []struct {
 		nerr    uint
@@ -864,4 +872,15 @@ func TestDecodeUncorrectableWord(t *testing.T) {
 			}
 		}
 	}
+}
+
+func ExampleDecodeWord() {
+	codeword := uint32(0x00fe8bae)
+	decoded, err := DecodeWord(codeword)
+	if err != nil {
+		fmt.Printf("%s\n", err)
+		return
+	}
+	fmt.Printf("0x%08x\n", decoded)
+	// Output: 0x00000bae
 }
