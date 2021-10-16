@@ -1,8 +1,9 @@
-package golay
+/*
+	Golay is reimplementation of wireshark's extended Golay (24,12,8) encoder/decoder.
 
-/* This is reimplementation of wireshark's extended Golay (24,12,8) encoder/decoder.
- * For more information, see https://github.com/boundary/wireshark/blob/master/epan/golay.c
- */
+	For more information, see https://github.com/boundary/wireshark/blob/master/epan/golay.c
+*/
+package golay
 
 import "errors"
 
@@ -38,7 +39,6 @@ var (
 	}
 )
 
-/* weight12 compute the Hamming weight of a 12-bit integer */
 func weight12(vector uint16) (w uint) {
 	for i := 0; i < 12; i++ {
 		if (vector & (1 << i)) > 0 {
@@ -57,6 +57,9 @@ func golayCoding(w uint16) (out uint16) {
 	return
 }
 
+/*
+	EncodeWord encodes the payload into Golay code.
+*/
 func EncodeWord(payload uint16) uint32 {
 	return uint32(payload) | (uint32(golayCoding(payload)) << 12)
 }
@@ -106,6 +109,13 @@ func golayErrors(codeword uint32) int32 {
 	return -1
 }
 
+/*
+	DecodeWord decodes Golay codes.
+
+	It can correct bit errors of up to 3 bits,
+	but can only detect bit errors of 4 bits.
+	If it detects a 4-bit error, it returns 0 and error.
+*/
 func DecodeWord(word uint32) (uint16, error) {
 	data := uint16(word & 0xfff)
 	errorbits := golayErrors(word)
