@@ -106,13 +106,13 @@ func golayErrors(codeword uint32) int32 {
 	return -1
 }
 
-func DecodeWord(word uint32) (int32, error) {
-	data := uint32(word & 0xfff)
+func DecodeWord(word uint32) (uint16, error) {
+	data := uint16(word & 0xfff)
 	errorbits := golayErrors(word)
 
 	if errorbits == -1 {
 		return 0, errors.New("4 errors are detected as uncorrectable")
 	}
-	dataerrors := uint32(errorbits & 0xfff)
-	return int32(data ^ uint32(dataerrors)), nil
+	dataerrors := uint16(errorbits & 0xfff)
+	return data ^ dataerrors, nil
 }
